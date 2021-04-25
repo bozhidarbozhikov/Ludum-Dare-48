@@ -13,6 +13,7 @@ public class PlayerStats : MonoBehaviour
     public PlayerMovement playerMovement;
     private float speed;
     private float halfSpeed;
+    public float score;
 
     private void Start()
     {
