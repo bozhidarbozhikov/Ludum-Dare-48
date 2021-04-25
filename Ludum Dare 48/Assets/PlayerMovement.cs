@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class PlayerMovement : MonoBehaviour
 {
-    Vector3 mouse_pos;
-    Vector3 object_pos;
+    Vector3 mousePos;
+    Vector2 lookDir;
     float angle;
+    public Camera cam;
 
     public float moveSpeed = 2f;
     public Rigidbody2D rb;
@@ -26,26 +28,26 @@ public class PlayerMovement : MonoBehaviour
         movement.x = Input.GetAxisRaw("Horizontal");
         movement.y = Input.GetAxisRaw("Vertical");
 
-        rb.velocity = movement * moveSpeed * Time.deltaTime;
+       
     }
 
     void FixedUpdate()
     {
-        rb.velocity = movement * moveSpeed;
 
+        rb.MovePosition(rb.position + movement * moveSpeed * Time.fixedDeltaTime);
         //rb.position = rb.position + movement * moveSpeed * Time.fixedDeltaTime;
     }
 
 
     void LookAtMouse()
     {
-        mouse_pos = Input.mousePosition;
-        mouse_pos.z = 5.23f;
-        object_pos = Camera.main.WorldToScreenPoint(transform.position);
-        mouse_pos.x = mouse_pos.x - object_pos.x;
-        mouse_pos.y = mouse_pos.y - object_pos.y;
-        angle = Mathf.Atan2(mouse_pos.y, mouse_pos.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Euler(0, 0, angle - 90);
+        mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
+        lookDir = mousePos - transform.position;
+        angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg - 90;
+
+        rb.rotation = angle;
     }
+
+   
 }
 
