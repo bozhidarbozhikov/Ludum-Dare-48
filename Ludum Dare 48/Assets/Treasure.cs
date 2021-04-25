@@ -27,6 +27,8 @@ public class Treasure : MonoBehaviour
         {
             FindObjectOfType<PlayerStats>().score += money;
 
+            FindObjectOfType<Score>().ChangeText();
+
             Destroy(gameObject);
         }
 
