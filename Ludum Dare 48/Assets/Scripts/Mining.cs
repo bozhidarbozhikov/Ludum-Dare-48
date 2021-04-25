@@ -19,6 +19,8 @@ public class Mining : MonoBehaviour
     public Sprite crackedWallSprite;
     public Tile crackedTile;
 
+    public ShadowCasterTilemapCreator shadowCasterTilemapCreator;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -60,7 +62,9 @@ public class Mining : MonoBehaviour
                         {
                             tilemap.SetTile(new Vector3Int(i, j, 0), null);
 
-                            FindObjectOfType<ShadowCasterTilemapCreator>().RemoveShadowCasterFromPosition(new Vector3Int(i, j, 0));
+                            shadowCasterTilemapCreator.RemoveShadowCasterFromPosition(new Vector3Int(i, j, 0));
+
+                            Debug.Log(new Vector3Int(i, j, 0));
 
                             StartCoroutine(ScanAgain());
                         }

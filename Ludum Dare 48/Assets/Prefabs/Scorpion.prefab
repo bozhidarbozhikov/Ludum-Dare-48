@@ -277,7 +277,7 @@ MonoBehaviour:
   attackRange: 5
   attackDelay: 1
   bulletPrefab: {fileID: 3684577625001395298, guid: eef1be16e2af97d47ac4229dbb26b6f4, type: 3}
-  bulletSpeed: 10
+  bulletSpeed: 4
   firepoint: {fileID: 7360521594791326408}
 --- !u!58 &-3242990810884373384
 CircleCollider2D:
