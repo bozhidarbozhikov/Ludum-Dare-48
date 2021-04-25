@@ -17,9 +17,10 @@ GameObject:
   - component: {fileID: -248593704634057468}
   - component: {fileID: 4089307634192899128}
   - component: {fileID: -5365587060894100367}
+  - component: {fileID: -7004506096906535102}
   m_Layer: 0
   m_Name: Spider
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -78,7 +79,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 2
   m_Sprite: {fileID: 7372226510921359295, guid: 4737768c0700d7f428031d4e2440ab61, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -312,10 +313,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   path: {fileID: -1680382690265618968}
   destinationSetter: {fileID: -248593704634057468}
-  attackType: 1
+  attackType: 2
   attackRange: 5
   attackDelay: 2
-  bulletPrefab: {fileID: 0}
+  bulletPrefab: {fileID: 1435841785067841806, guid: 8f0ed548ac2435443b8845816f7bb132, type: 3}
   bulletSpeed: 2.5
   firepoint: {fileID: 9161538666831822690}
 --- !u!58 &-5365587060894100367
@@ -334,6 +335,19 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 7
+--- !u!114 &-7004506096906535102
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5598924434664948849}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b608d96e85c127146b7a8773986e97e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health: 5
 --- !u!1 &6351322191848911189
 GameObject:
   m_ObjectHideFlags: 0

@@ -18,22 +18,25 @@ public class AIPathfinding : MonoBehaviour
     public float attackDelay;
 
     bool playerInRange = false;
+    bool playerInLOF = false;
     bool isAttacking = false;
 
     public GameObject bulletPrefab;
     public float bulletSpeed;
     public Transform firepoint;
 
+    private Transform player;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        player = GameObject.FindGameObjectWithTag("Player").transform;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (playerInRange && Vector3.Distance(transform.position, destinationSetter.target.position) < attackRange && !isAttacking)
+        if (playerInRange && playerInLOF && Vector3.Distance(transform.position, destinationSetter.target.position) < attackRange && !isAttacking)
         {
             switch (attackType)
             {
@@ -49,6 +52,19 @@ public class AIPathfinding : MonoBehaviour
         }
     }
 
+    private void FixedUpdate()
+    {
+        if (playerInRange && !playerInLOF)
+        {
+            playerInLOF = LineOfSight();
+
+            if (playerInLOF == true)
+            {
+                destinationSetter.target = player;
+            }
+        }
+    }
+
     IEnumerator RangedAttack(bool cobweb)
     {
         isAttacking = true;
@@ -58,6 +74,11 @@ public class AIPathfinding : MonoBehaviour
         StartCoroutine(LookAtPlayer());
 
         yield return new WaitForSeconds(attackDelay);
+
+        if (!LineOfSight())
+        {
+            yield return new WaitUntil(() => LineOfSight());
+        }
 
         GameObject bullet = Instantiate(bulletPrefab, firepoint.position, Quaternion.identity);
         bullet.transform.up = destinationSetter.target.position - bullet.transform.position;
@@ -81,7 +102,8 @@ public class AIPathfinding : MonoBehaviour
         {
             transform.up = destinationSetter.target.position - transform.position;
 
-            timer += Time.deltaTime;
+            if (LineOfSight())
+                timer += Time.deltaTime;
 
             yield return null;
         }
@@ -112,13 +134,26 @@ public class AIPathfinding : MonoBehaviour
         isAttacking = false;
     }
 
+    private bool LineOfSight()
+    {
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, player.position - transform.position);
+
+        if (hit)
+        {
+            if (hit.transform.CompareTag("Player"))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Player"))
         {
             playerInRange = true;
-
-            destinationSetter.target = collision.transform;
         }
     }
 
