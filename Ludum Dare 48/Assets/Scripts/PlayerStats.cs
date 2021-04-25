@@ -15,6 +15,8 @@ public class PlayerStats : MonoBehaviour
     private float halfSpeed;
     public float score;
 
+    public HealthBar healthBar;
+
     private void Start()
     {
         health = maxHealth;
@@ -23,14 +25,25 @@ public class PlayerStats : MonoBehaviour
         halfSpeed = playerMovement.moveSpeed / 2;
     }
 
+    private void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.E))
+        {
+            TakeDamage();
+        }
+    }
+
     public void TakeDamage()
     {
         health--;
+        healthBar.UpdateHealthUI(health, maxHealth);
 
         if (health <= 0)
         {
             Destroy(gameObject);
         }
+
+
     }
 
     public void CalculateCobwebs()
