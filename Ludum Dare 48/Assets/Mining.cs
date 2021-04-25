@@ -6,7 +6,7 @@ using Pathfinding;
 
 public class Mining : MonoBehaviour
 {
-    public AIBase aibase;
+    public AstarPath aiPath;
 
     public Transform minePoint;
 
@@ -62,12 +62,20 @@ public class Mining : MonoBehaviour
 
                             FindObjectOfType<ShadowCasterTilemapCreator>().RemoveShadowCasterFromPosition(new Vector3Int(i, j, 0));
 
-
+                            StartCoroutine(ScanAgain());
                         }
                     }
                 }
             }
         }
+    }
+
+    IEnumerator ScanAgain()
+    {
+        yield return new WaitForSeconds(0.1f);
+
+
+        aiPath.Scan();
     }
 
 

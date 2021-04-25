@@ -5,12 +5,20 @@ using UnityEngine;
 
 public class Shooting : MonoBehaviour
 {
-    public GameObject arrowPrefab;
+    public GameObject bulletPrefab;
     public float addedForce = 20f;
     public Transform firePoint;
     Vector2 mousePos;
     public Camera cam;
     public Rigidbody2D rb2d;
+
+    public float damage;
+    public float buckshotRotationDeviation;
+
+    private void Start()
+    {
+
+    }
 
     // Update is called once per frame
     void Update()
@@ -23,15 +31,46 @@ public class Shooting : MonoBehaviour
     }
     void AimAndShoot()
     {
-        Vector2 lookDirection = mousePos - rb2d.position;
-        float angle = Mathf.Atan2(lookDirection.y, lookDirection.x) * Mathf.Rad2Deg - 90f;
-        firePoint.eulerAngles = new Vector3(0, 0, angle);
+        /*float rotationDeviation = -30;
 
-        GameObject arrow = Instantiate(arrowPrefab, transform.position, transform.rotation);
-        Rigidbody2D rb = arrow.GetComponent<Rigidbody2D>();
-        rb.AddForce(firePoint.up * addedForce, ForceMode2D.Impulse);
-        arrow.transform.Rotate(0, 0, angle + 90f);
-        Destroy(arrow, 2f);
+        for (int i = 0; i < 3; i++)
+        {
+            firePoint.eulerAngles = new Vector3(0, 0, rotationDeviation);
 
+            Vector2 lookDirection = mousePos - rb2d.position;
+            float angle = Mathf.Atan2(lookDirection.y, lookDirection.x) * Mathf.Rad2Deg - 90f;
+
+            GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+            Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
+
+            bullet.GetComponent<PlayerBullet>().damage = damage;
+
+            rb.AddForce(bullet.transform.up * addedForce, ForceMode2D.Impulse);
+
+            rotationDeviation += 30f;
+        }
+
+        firePoint.eulerAngles = Vector3.zero;*/
+
+        for (int i = 0; i < 3; i++)
+        {
+            float rotationDeviation = 0;
+
+            if (i == 1) rotationDeviation = buckshotRotationDeviation;
+            if (i == 2) rotationDeviation = -buckshotRotationDeviation;
+
+            GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+            Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
+
+            rb.AddForce(RotateVector2(firePoint.up, rotationDeviation * Mathf.Deg2Rad) * addedForce, ForceMode2D.Impulse);
+        }
+    }
+
+    public static Vector2 RotateVector2(Vector2 v, float delta)
+    {
+        return new Vector2(
+            v.x * Mathf.Cos(delta) - v.y * Mathf.Sin(delta),
+            v.x * Mathf.Sin(delta) + v.y * Mathf.Cos(delta)
+        );
     }
 }
