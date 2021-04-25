@@ -2,9 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using Pathfinding;
 
 public class Mining : MonoBehaviour
 {
+    public AIBase aibase;
+
     public Transform minePoint;
 
     public Tilemap tilemap;
@@ -58,6 +61,7 @@ public class Mining : MonoBehaviour
                             tilemap.SetTile(new Vector3Int(i, j, 0), null);
 
                             FindObjectOfType<ShadowCasterTilemapCreator>().RemoveShadowCasterFromPosition(new Vector3Int(i, j, 0));
+
 
                         }
                     }
