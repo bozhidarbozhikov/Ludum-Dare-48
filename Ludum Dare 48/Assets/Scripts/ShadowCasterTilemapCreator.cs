@@ -50,6 +50,8 @@ public class ShadowCasterTilemapCreator : MonoBehaviour
     {
         int index = shadowCasterPositions.IndexOf(position);
 
+        
+
         Destroy(shadowCasterObjects[index]);
     }
 }

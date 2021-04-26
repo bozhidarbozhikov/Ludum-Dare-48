@@ -36,7 +36,7 @@ public class AIPathfinding : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (playerInRange && playerInLOF && Vector3.Distance(transform.position, destinationSetter.target.position) < attackRange && !isAttacking)
+        if (playerInRange && playerInLOF && Vector3.Distance(transform.position, player.position) < attackRange && !isAttacking)
         {
             switch (attackType)
             {

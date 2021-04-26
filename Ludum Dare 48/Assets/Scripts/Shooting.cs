@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Shooting : MonoBehaviour
 {
@@ -15,15 +16,24 @@ public class Shooting : MonoBehaviour
     public float damage;
     public float buckshotRotationDeviation;
 
+    public int maxBullets;
+    int bullets;
+    public float reloadTime;
+    bool canFire = true;
+    public Slider reloadSlider;
+    public Image[] shells;
+
     private void Start()
     {
+        bullets = maxBullets;
 
+        reloadSlider.maxValue = reloadTime;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Mouse0))
+        if (Input.GetKeyDown(KeyCode.Mouse0) && canFire)
         {
             mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
             AimAndShoot();
@@ -64,6 +74,46 @@ public class Shooting : MonoBehaviour
 
             rb.AddForce(RotateVector2(firePoint.up, rotationDeviation * Mathf.Deg2Rad) * addedForce, ForceMode2D.Impulse);
         }
+
+        bullets--;
+
+        if (bullets == 1)
+        {
+            shells[0].enabled = true;
+            shells[1].enabled = false;
+        }
+        else if (bullets == 0)
+        {
+            shells[0].enabled = false;
+            shells[1].enabled = false;
+        }
+
+        if (bullets <= 0) StartCoroutine(Reload());
+    }
+
+    IEnumerator Reload()
+    {
+        canFire = false;
+
+        reloadSlider.value = 0;
+
+        float timer = 0;
+
+        while (timer < reloadTime)
+        {
+            timer += Time.deltaTime;
+
+            reloadSlider.value = timer;
+
+            yield return null;
+        }
+
+        bullets = maxBullets;
+
+        shells[0].enabled = true;
+        shells[1].enabled = true;
+
+        canFire = true;
     }
 
     public static Vector2 RotateVector2(Vector2 v, float delta)
