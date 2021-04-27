@@ -16,7 +16,9 @@ public class AIPathfinding : MonoBehaviour
 
     public float attackRange;
     public float attackDelay;
+    public float attackCooldown;
 
+    bool canAttack = true;
     bool playerInRange = false;
     bool playerInLOF = false;
     bool isAttacking = false;
@@ -36,7 +38,7 @@ public class AIPathfinding : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (playerInRange && playerInLOF && Vector3.Distance(transform.position, player.position) < attackRange && !isAttacking)
+        if (playerInRange && playerInLOF && Vector3.Distance(firepoint.position, player.position) < attackRange && !isAttacking && canAttack)
         {
             switch (attackType)
             {
@@ -61,6 +63,23 @@ public class AIPathfinding : MonoBehaviour
             if (playerInLOF == true)
             {
                 destinationSetter.target = player;
+
+                switch (attackType)
+                {
+                    case AttackType.Melee:
+                        FindObjectOfType<AudioManager>().Play("Zombie_Alert");
+                        break;
+                    case AttackType.Ranged:
+                        FindObjectOfType<AudioManager>().Play("Scorpion_Alert");
+                        break;
+                    case AttackType.Cobweb:
+                        {
+                            FindObjectOfType<AudioManager>().Play("Spider_Alert_1");
+                        }
+                        break;
+                    default:
+                        break;
+                }
             }
         }
     }
@@ -82,8 +101,10 @@ public class AIPathfinding : MonoBehaviour
 
         GameObject bullet = Instantiate(bulletPrefab, firepoint.position, Quaternion.identity);
         bullet.transform.up = destinationSetter.target.position - bullet.transform.position;
-        bullet.GetComponent<Rigidbody2D>().AddForce((destinationSetter.target.position - bullet.transform.position) * bulletSpeed, ForceMode2D.Impulse);
+        bullet.GetComponent<Rigidbody2D>().AddForce((destinationSetter.target.position - bullet.transform.position).normalized * bulletSpeed, ForceMode2D.Impulse);
         bullet.GetComponent<EnemyBullet>().isCobweb = cobweb;
+
+        FindObjectOfType<AudioManager>().Play("Enemy_Shoot");
 
         yield return new WaitForSeconds(attackDelay / 2);
 
@@ -111,13 +132,15 @@ public class AIPathfinding : MonoBehaviour
 
     IEnumerator MeleeAttack()
     {
+        StartCoroutine(AttackCooldown());
+
         isAttacking = true;
 
         path.canMove = false;
 
         yield return new WaitForSeconds(attackDelay);
 
-        Collider2D[] hit = Physics2D.OverlapCircleAll(transform.position, attackRange);
+        Collider2D[] hit = Physics2D.OverlapCircleAll(firepoint.position, attackRange);
 
         foreach (Collider2D col in hit)
         {
@@ -127,7 +150,7 @@ public class AIPathfinding : MonoBehaviour
             }
         }
 
-        yield return new WaitForSeconds(attackDelay / 2);
+        yield return new WaitForSeconds(attackDelay / 3);
 
         path.canMove = true;
 
@@ -149,6 +172,22 @@ public class AIPathfinding : MonoBehaviour
         return false;
     }
 
+    IEnumerator AttackCooldown()
+    {
+        canAttack = false;
+
+        float timer = 0;
+
+        while (timer < attackCooldown)
+        {
+            timer += Time.deltaTime;
+
+            yield return null;
+        }
+
+        canAttack = true;
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Player"))
@@ -161,14 +200,15 @@ public class AIPathfinding : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
-            playerInRange = false;
 
-            destinationSetter.target = null;
+            playerInRange = false;
         }
     }
 
     private void OnDrawGizmosSelected()
     {
         Gizmos.DrawWireSphere(transform.position, attackRange);
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(firepoint.position, attackRange);
     }
 }

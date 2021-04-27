@@ -28,6 +28,8 @@ public class Shooting : MonoBehaviour
         bullets = maxBullets;
 
         reloadSlider.maxValue = reloadTime;
+
+        reloadSlider.value = reloadSlider.maxValue;
     }
 
     // Update is called once per frame
@@ -37,6 +39,11 @@ public class Shooting : MonoBehaviour
         {
             mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
             AimAndShoot();
+        }
+
+        if (Input.GetKeyDown(KeyCode.R) && bullets != maxBullets)
+        {
+            StartCoroutine(Reload());
         }
     }
     void AimAndShoot()
@@ -77,6 +84,12 @@ public class Shooting : MonoBehaviour
 
         bullets--;
 
+        int r = Random.Range(0, 51);
+        if (r == 50)
+            FindObjectOfType<AudioManager>().Play("Thud");
+        else
+            FindObjectOfType<AudioManager>().Play("Shotgun_Shoot");
+
         if (bullets == 1)
         {
             shells[0].enabled = true;
@@ -93,9 +106,17 @@ public class Shooting : MonoBehaviour
 
     IEnumerator Reload()
     {
+        shells[0].enabled = false;
+        shells[1].enabled = false;
+
         canFire = false;
 
         reloadSlider.value = 0;
+
+
+        FindObjectOfType<AudioManager>().Play("Shotgun_Reload_1");
+        yield return new WaitForSeconds(0.1f);
+        FindObjectOfType<AudioManager>().Play("Shotgun_Reload_2");
 
         float timer = 0;
 

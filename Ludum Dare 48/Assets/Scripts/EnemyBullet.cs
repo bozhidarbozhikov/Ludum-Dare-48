@@ -16,7 +16,8 @@ public class EnemyBullet : MonoBehaviour
 
             Instantiate(cobwebPrefab, spawnPos, Quaternion.identity);
         }
-        else if (collision.transform.CompareTag("Player"))
+
+        if (collision.transform.CompareTag("Player"))
         {
             collision.transform.GetComponent<PlayerStats>().TakeDamage();
         }

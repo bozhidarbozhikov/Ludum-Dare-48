@@ -13,7 +13,6 @@ public class PlayerStats : MonoBehaviour
     public PlayerMovement playerMovement;
     private float speed;
     private float halfSpeed;
-    public float score;
 
     public HealthBar healthBar;
 
@@ -25,9 +24,9 @@ public class PlayerStats : MonoBehaviour
         halfSpeed = playerMovement.moveSpeed / 2;
     }
 
-    private void Update()
+    void Update()
     {
-        if(Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.U))
         {
             TakeDamage();
         }
@@ -40,9 +39,14 @@ public class PlayerStats : MonoBehaviour
 
         if (health <= 0)
         {
-            Destroy(gameObject);
-        }
+            FindObjectOfType<AudioManager>().Play("Player_Die");
 
+            FindObjectOfType<SceneMaster>().RestartLevel();
+        }
+        else
+        {
+            FindObjectOfType<AudioManager>().Play("Player_Hurt");
+        }
 
     }
 

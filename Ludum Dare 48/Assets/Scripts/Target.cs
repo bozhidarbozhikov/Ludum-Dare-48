@@ -12,7 +12,13 @@ public class Target : MonoBehaviour
 
         if (health <= 0)
         {
+            FindObjectOfType<AudioManager>().Play("Enemy_Die");
+
             Destroy(gameObject);
+        }
+        else
+        {
+            FindObjectOfType<AudioManager>().Play("Enemy_Hurt");
         }
     }
 }

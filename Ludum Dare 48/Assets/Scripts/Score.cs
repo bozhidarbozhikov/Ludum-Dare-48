@@ -7,14 +7,13 @@ public class Score : MonoBehaviour
 {
     public Text scoreText;
 
-    // Update is called once per frame
-    void Update()
+    void Start()
     {
-        
+        ChangeText();
     }
 
     public void ChangeText()
     {
-        scoreText.text = "Score: " + FindObjectOfType<PlayerStats>().score.ToString();
+        scoreText.text = "Score: " + FindObjectOfType<ScoreCounter>().score.ToString();
     }
 }

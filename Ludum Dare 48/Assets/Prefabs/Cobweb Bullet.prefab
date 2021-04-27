@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6917423536090336322}
   - component: {fileID: 1094700137060362913}
   - component: {fileID: 6506437377051921658}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cobweb Bullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}

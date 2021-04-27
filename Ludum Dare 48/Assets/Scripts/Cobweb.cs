@@ -10,6 +10,8 @@ public class Cobweb : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
+            FindObjectOfType<AudioManager>().Play("Cobweb_Stuck");
+
             collision.GetComponent<PlayerStats>().numOfCobwebs++;
             collision.GetComponent<PlayerStats>().CalculateCobwebs();
         }

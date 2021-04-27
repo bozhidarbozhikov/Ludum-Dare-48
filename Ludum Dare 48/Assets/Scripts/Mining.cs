@@ -11,20 +11,27 @@ public class Mining : MonoBehaviour
     public Transform minePoint;
 
     public Tilemap tilemap;
+    public Tilemap goldOreTilemap;
+    public Transform selectedTile;
+    public SpriteRenderer selectedTileRenderer;
 
     public int mineRadius;
 
     BoundsInt bounds;
+    Bounds selectedBounds;
 
     public Sprite crackedWallSprite;
     public Tile crackedTile;
+    public Tile goldOre;
+    public int goldScore;
 
     public ShadowCasterTilemapCreator shadowCasterTilemapCreator;
+    private PlayerStats playerStats;
 
     // Start is called before the first frame update
     void Start()
     {
-
+        playerStats = transform.GetComponent<PlayerStats>();
     }
 
     // Update is called once per frame
@@ -34,6 +41,8 @@ public class Mining : MonoBehaviour
         {
             Mine();
         }
+
+        AdjustSelectedTile();
     }
 
     void Mine()
@@ -64,13 +73,57 @@ public class Mining : MonoBehaviour
 
                             shadowCasterTilemapCreator.RemoveShadowCasterFromPosition(new Vector3Int(i, j, 0));
 
-                            Debug.Log(new Vector3Int(i, j, 0));
+
+                            FindObjectOfType<AudioManager>().Play("Block_Dug");
+
+                            if (goldOreTilemap.GetTile(new Vector3Int(i, j, 0)) == goldOre)
+                            {
+                                goldOreTilemap.SetTile(new Vector3Int(i, j, 0), null);
+
+                                FindObjectOfType<ScoreCounter>().score += goldScore;
+
+                                FindObjectOfType<Score>().ChangeText();
+
+
+                                FindObjectOfType<AudioManager>().Play("Gold_PickUp_Small");
+                            }
 
                             StartCoroutine(ScanAgain());
                         }
                     }
                 }
             }
+        }
+    }
+
+    void AdjustSelectedTile()
+    {
+        if (tilemap == null)
+        {
+            tilemap = GameObject.FindGameObjectWithTag("Wall").GetComponent<Tilemap>();
+            goldOreTilemap = GameObject.FindGameObjectWithTag("GoldOreWall").GetComponent<Tilemap>();
+            shadowCasterTilemapCreator = FindObjectOfType<ShadowCasterTilemapCreator>();
+
+            return;
+        }
+
+        Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition) + new Vector3(-0.5f, -0.5f);
+
+        Vector3Int mouseTilePos = tilemap.WorldToCell(Vector3Int.RoundToInt(mouseWorldPos));
+
+        Vector3Int roundedPos = Vector3Int.RoundToInt(transform.position);
+
+        selectedBounds.SetMinMax(roundedPos - new Vector3Int(mineRadius, mineRadius, 0), roundedPos + new Vector3Int(mineRadius, mineRadius - 1, 0));
+
+        selectedTile.position = mouseTilePos + new Vector3(0.5f, 0.5f);
+
+        if (tilemap.GetTile(mouseTilePos) != null && selectedBounds.Contains(mouseTilePos))
+        {
+            selectedTileRenderer.enabled = true;
+        }
+        else
+        {
+            selectedTileRenderer.enabled = false;
         }
     }
 

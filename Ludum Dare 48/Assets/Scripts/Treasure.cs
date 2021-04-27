@@ -5,29 +5,34 @@ using UnityEngine;
 
 public class Treasure : MonoBehaviour
 {
-    public float money = 2f;
+    public int money = 2;
 
-
-
-    // Start is called before the first frame update
-    void Start()
+    public enum Size
     {
-        
+        Small,
+        Medium
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    public Size treasureSize;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if(collision.tag == "Player")
         {
-            FindObjectOfType<PlayerStats>().score += money;
+            FindObjectOfType<ScoreCounter>().score += money;
 
             FindObjectOfType<Score>().ChangeText();
+
+            switch (treasureSize)
+            {
+                case Size.Small:
+                    FindObjectOfType<AudioManager>().Play("Gold_PickUp_Small");
+                    break;
+                case Size.Medium:
+                    FindObjectOfType<AudioManager>().Play("Gold_PickUp_Medium");
+                    break;
+                default:
+                    break;
+            }
 
             Destroy(gameObject);
         }

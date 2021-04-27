@@ -244,7 +244,7 @@ MonoBehaviour:
   alwaysDrawGizmos: 0
   slowWhenNotFacingTarget: 1
   whenCloseToDestination: 0
-  constrainInsideGraph: 0
+  constrainInsideGraph: 1
 --- !u!114 &-2335097068467051351
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -275,9 +275,10 @@ MonoBehaviour:
   destinationSetter: {fileID: -2335097068467051351}
   attackType: 1
   attackRange: 5
-  attackDelay: 1
+  attackDelay: 0.75
+  attackCooldown: 0
   bulletPrefab: {fileID: 3684577625001395298, guid: eef1be16e2af97d47ac4229dbb26b6f4, type: 3}
-  bulletSpeed: 4
+  bulletSpeed: 10
   firepoint: {fileID: 7360521594791326408}
 --- !u!58 &-3242990810884373384
 CircleCollider2D:
@@ -323,7 +324,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b608d96e85c127146b7a8773986e97e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 5
+  health: 6
 --- !u!1 &7038628824800844056
 GameObject:
   m_ObjectHideFlags: 0

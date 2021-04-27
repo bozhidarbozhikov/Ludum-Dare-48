@@ -6,6 +6,9 @@ TagManager:
   tags:
   - GenerateShadows
   - Enemy
+  - Wall
+  - GoldOreWall
+  - ShadowHolder
   layers:
   - Default
   - TransparentFX
@@ -15,7 +18,7 @@ TagManager:
   - UI
   - Wall
   - PlayerBullet
-  - 
+  - IgnoreBullet
   - 
   - 
   - 
